@@ -1,0 +1,4 @@
+v1.0
+--
+GUI version that can send message to USB HID device and received messages from USB HID device.
+use InMethodUsbLib v1.0 , swt library and  hid4java library (https://github.com/gary-rowe/hid4java)
