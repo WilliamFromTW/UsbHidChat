@@ -1,3 +1,11 @@
+v1.1
+--
+1. GUI tunning.
+2. typo
+3. Modify Message XP .
+4.test in ubuntu 16.04 success.
+5.remove gradle build instead of eclipse export jar runnable file.
+
 v1.0
 --
 GUI version that can send message to USB HID device and received messages from USB HID device.

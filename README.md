@@ -8,6 +8,7 @@ http://download.eclipse.org/windowbuilder/latest/
 1. Create SWT/JFace Project        
 2. Copy all files in "src" , "libs" to project directory and include jar files in libs.                
 3. export runnable jar files                
+ps. root permission is requirement in linux platform    
       
 ## Reference    
 this project use InMethodUsbLib and usb4java project         
