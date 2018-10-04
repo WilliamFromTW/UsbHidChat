@@ -88,11 +88,11 @@ public class MainApp {
 	 */
 	protected void createContents() {
 		shlDesignedByWilliam = new Shell();
-		shlDesignedByWilliam.setSize(871, 592);
+		shlDesignedByWilliam.setSize(921, 592);
 		shlDesignedByWilliam.setText("USB HID test");
 
 		Group group = new Group(shlDesignedByWilliam, SWT.NONE);
-		group.setBounds(10, 10, 840, 59);
+		group.setBounds(10, 10, 899, 59);
 
 		CLabel lblNewLabel = new CLabel(group, SWT.NONE);
 		lblNewLabel.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
@@ -133,7 +133,7 @@ public class MainApp {
 			}
 		});
 		btnConnect.setEnabled(false);
-		btnConnect.setBounds(632, 22, 78, 25);
+		btnConnect.setBounds(770, 22, 117, 25);
 		btnConnect.setText("Connect");
 
 		combo = new CCombo(group, SWT.BORDER);
@@ -153,11 +153,11 @@ public class MainApp {
 		});
 		combo.setEnabled(false);
 		combo.setEditable(false);
-		combo.setBounds(275, 22, 267, 21);
+		combo.setBounds(275, 22, 405, 21);
 
 		btnNewButton = new Button(group, SWT.NONE);
 		btnNewButton.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
-		btnNewButton.setBounds(548, 22, 78, 25);
+		btnNewButton.setBounds(686, 22, 78, 25);
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -166,11 +166,18 @@ public class MainApp {
 
 				if (aDeviceList.size() > 0) {
 					String[] sList = new String[aDeviceList.size()];
+					String sProductId = null;
 					for (int i = 0; i < aDeviceList.size(); i++) {
 						HidDevice aTmpHidDevice = aDeviceList.get(i);
-						sList[i] = aTmpHidDevice.getProduct() + " (0x"
-								+ Integer.toHexString(aTmpHidDevice.getVendorId() & 0xffff) + " , 0x"
-								+ Integer.toHexString(aTmpHidDevice.getProductId() & 0xffff) + ")";
+						sProductId = aTmpHidDevice.getProduct();
+						if (sProductId == null)
+							sList[i] = "NULL(No write permission)" + " (0x"
+									+ Integer.toHexString(aTmpHidDevice.getVendorId() & 0xffff) + " , 0x"
+									+ Integer.toHexString(aTmpHidDevice.getProductId() & 0xffff) + ")";
+						else
+							sList[i] = sProductId + " (0x" + Integer.toHexString(aTmpHidDevice.getVendorId() & 0xffff)
+									+ " , 0x" + Integer.toHexString(aTmpHidDevice.getProductId() & 0xffff) + ")";
+
 						System.out.println(aTmpHidDevice);
 					}
 					combo.setEnabled(true);
@@ -194,14 +201,14 @@ public class MainApp {
 		CommandGroup = new Group(shlDesignedByWilliam, SWT.NONE);
 		CommandGroup.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
 		CommandGroup.setEnabled(false);
-		CommandGroup.setBounds(10, 75, 840, 466);
+		CommandGroup.setBounds(10, 75, 899, 466);
 
 		txtFf = new Text(CommandGroup, SWT.BORDER | SWT.RIGHT);
 		txtFf.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		txtFf.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
 		txtFf.setText("ff");
 		txtFf.setEnabled(true);
-		txtFf.setBounds(226, 50, 130, 21);
+		txtFf.setBounds(226, 50, 202, 21);
 
 		CLabel lblNewLabel_1 = new CLabel(CommandGroup, SWT.NONE);
 		lblNewLabel_1.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
@@ -235,8 +242,13 @@ public class MainApp {
 					try {
 						aResultSet = aUsbHidTools.getResponsedDataBySendCommand(aHidDevice, aCmd,
 								Integer.parseInt(PackageLength.getText()));
-						FeedBackMessages.setText("cmd:" + txtFf.getText() + "\r\n"
-								+ bytesToHexString(aResultSet).toUpperCase() + "\r\n" + FeedBackMessages.getText());
+						if (combo_1.getSelectionIndex() == 0) // hex
+							FeedBackMessages.setText("command : (HEX) 0x" + txtFf.getText() + "\r\n"
+									+ bytesToHexString(aResultSet).toUpperCase() + "\r\n" + FeedBackMessages.getText());
+						else if (combo_1.getSelectionIndex() == 1)
+							FeedBackMessages.setText("command : (Text) " + txtFf.getText() + "\r\n"
+									+ bytesToHexString(aResultSet).toUpperCase() + "\r\n" + FeedBackMessages.getText());
+
 						// for (byte b : aResultSet) {
 						// System.out.printf(" %02x", b);
 						// }
@@ -251,50 +263,50 @@ public class MainApp {
 				}
 			}
 		});
-		btnSend.setBounds(278, 77, 78, 25);
+		btnSend.setBounds(350, 77, 78, 25);
 		btnSend.setText("Send");
 
 		FeedBackMessages = new Text(CommandGroup, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		FeedBackMessages.setFont(SWTResourceManager.getFont("Verdana", 10, SWT.NORMAL));
 		FeedBackMessages.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
 		FeedBackMessages.setEnabled(true);
-		FeedBackMessages.setBounds(373, 47, 453, 362);
+		FeedBackMessages.setBounds(434, 47, 453, 362);
 
 		combo_1 = new CCombo(CommandGroup, SWT.BORDER | SWT.RIGHT);
 		combo_1.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
 		combo_1.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		combo_1.setEnabled(true);
 		combo_1.setListVisible(true);
-		combo_1.setItems(new String[] { "HEX ", "ASCII" });
+		combo_1.setItems(new String[] { "HEX ", "TEXT" });
 		combo_1.setBounds(99, 50, 119, 21);
 		combo_1.select(0);
 
 		PackageLength = new Text(CommandGroup, SWT.BORDER);
-		PackageLength.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
+		PackageLength.setFont(SWTResourceManager.getFont("Ubuntu", 10, SWT.NORMAL));
 
 		PackageLength.setText("8");
-		PackageLength.setBounds(149, 189, 32, 21);
+		PackageLength.setBounds(684, 415, 32, 21);
 
 		lblSpackagelength = new CLabel(CommandGroup, SWT.NONE);
-		lblSpackagelength.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
-		lblSpackagelength.setText("PACKET_LENGTH");
-		lblSpackagelength.setBounds(10, 189, 133, 21);
+		lblSpackagelength.setFont(SWTResourceManager.getFont("Ubuntu", 10, SWT.NORMAL));
+		lblSpackagelength.setText("Packet Length");
+		lblSpackagelength.setBounds(588, 419, 90, 21);
 
 		lblHintOr = new CLabel(CommandGroup, SWT.NONE);
 		lblHintOr.setFont(SWTResourceManager.getFont("Microsoft JhengHei UI", 8, SWT.ITALIC));
-		lblHintOr.setBounds(10, 216, 316, 21);
-		lblHintOr.setText("bytes from USB HID  device , each reading loop");
+		lblHintOr.setBounds(584, 435, 192, 21);
+		lblHintOr.setText(" byte size  every reading loop");
 
 		lblV = new CLabel(CommandGroup, SWT.RIGHT);
 		lblV.setFont(SWTResourceManager.getFont("Verdana", 7, SWT.NORMAL));
-		lblV.setBounds(693, 415, 133, 41);
+		lblV.setBounds(754, 415, 133, 41);
 		lblV.setText("InMethodUsbHIDTest \r\nv1.1\r\n2018/10/04");
 
 		lblMessageSentTo = new CLabel(CommandGroup, SWT.NONE);
 		lblMessageSentTo.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 		lblMessageSentTo.setFont(SWTResourceManager.getFont("Microsoft JhengHei UI", 10, SWT.BOLD));
 		lblMessageSentTo.setText("Message sent to USB HID device");
-		lblMessageSentTo.setBounds(10, 23, 279, 21);
+		lblMessageSentTo.setBounds(10, 10, 279, 21);
 
 		Button btnClear = new Button(CommandGroup, SWT.NONE);
 		btnClear.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
@@ -304,7 +316,7 @@ public class MainApp {
 				FeedBackMessages.setText("");
 			}
 		});
-		btnClear.setBounds(373, 415, 53, 25);
+		btnClear.setBounds(434, 415, 53, 25);
 		btnClear.setText("Clear");
 
 		btnSave = new Button(CommandGroup, SWT.NONE);
@@ -317,11 +329,11 @@ public class MainApp {
 				dialog.setFilterExtensions(new String[] { "*.txt", "*.*" });
 
 				dialog.setFilterPath(File.separator);
-				  SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
-						    Date current = new Date();
-				dialog.setFileName(aHidDevice.getProduct()+"_UsbHidMessages_"+sdFormat.format(current)+".txt");
+				SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
+				Date current = new Date();
+				dialog.setFileName(aHidDevice.getProduct() + "_UsbHidMessages_" + sdFormat.format(current) + ".txt");
 				if (dialog.open() != null) {
-					String sFileName = dialog.getFilterPath() + File.separator  + dialog.getFileName();
+					String sFileName = dialog.getFilterPath() + File.separator + dialog.getFileName();
 					System.out.println("File Name = " + sFileName);
 					try {
 						BufferedWriter writer = new BufferedWriter(new FileWriter(sFileName, true));
@@ -334,14 +346,14 @@ public class MainApp {
 				}
 			}
 		});
-		btnSave.setBounds(432, 415, 78, 25);
+		btnSave.setBounds(493, 415, 78, 25);
 		btnSave.setText("Save");
-		
+
 		lblMessagesFromDevice = new CLabel(CommandGroup, SWT.NONE);
 		lblMessagesFromDevice.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		lblMessagesFromDevice.setText("Messages received from USB HID device ( Hex String )");
+		lblMessagesFromDevice.setText("Messages received from USB HID device\nOutput :  8 bytes Hex String each line ");
 		lblMessagesFromDevice.setFont(SWTResourceManager.getFont("Microsoft JhengHei UI", 10, SWT.BOLD));
-		lblMessagesFromDevice.setBounds(373, 23, 366, 21);
+		lblMessagesFromDevice.setBounds(434, 10, 453, 34);
 
 	}
 
