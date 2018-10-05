@@ -9,8 +9,10 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.List;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -24,10 +26,12 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
@@ -37,13 +41,13 @@ public class MainApp {
 	private UsbHidTools aUsbHidTools;
 	private List<HidDevice> aDeviceList;
 	private HidDevice aHidDevice;
-	private Text txtFf;
+	private Text txtCmd;
 	private Text FeedBackMessages;
 
 	private Button btnConnect;
-	private CCombo combo;
-	private Button btnNewButton;
-	private CCombo combo_1;
+	private CCombo comboDevice;
+	private Button btnScan;
+	private CCombo comboEncode;
 	private Button btnSend;
 	private Group CommandGroup;
 	private Text PackageLength;
@@ -110,7 +114,7 @@ public class MainApp {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				if (btnConnect.getText().equalsIgnoreCase("Connect")) {
-					aHidDevice = aDeviceList.get(combo.getSelectionIndex());
+					aHidDevice = aDeviceList.get(comboDevice.getSelectionIndex());
 
 					if (aHidDevice.open()) {
 						System.out.println("success");
@@ -136,14 +140,14 @@ public class MainApp {
 		btnConnect.setBounds(770, 22, 117, 25);
 		btnConnect.setText("Connect");
 
-		combo = new CCombo(group, SWT.BORDER);
-		combo.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
-		combo.addSelectionListener(new SelectionAdapter() {
+		comboDevice = new CCombo(group, SWT.BORDER);
+		comboDevice.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
+		comboDevice.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				combo.getSelectionIndex();
+				comboDevice.getSelectionIndex();
 				btnConnect.setEnabled(true);
-				System.out.println("selected index = " + combo.getSelectionIndex());
+				System.out.println("selected index = " + comboDevice.getSelectionIndex());
 				if (aHidDevice != null && aHidDevice.isOpen()) {
 					aHidDevice.close();
 					btnConnect.setText("Connect");
@@ -151,14 +155,14 @@ public class MainApp {
 				}
 			}
 		});
-		combo.setEnabled(false);
-		combo.setEditable(false);
-		combo.setBounds(275, 22, 405, 21);
+		comboDevice.setEnabled(false);
+		comboDevice.setEditable(false);
+		comboDevice.setBounds(275, 22, 405, 21);
 
-		btnNewButton = new Button(group, SWT.NONE);
-		btnNewButton.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
-		btnNewButton.setBounds(686, 22, 78, 25);
-		btnNewButton.addMouseListener(new MouseAdapter() {
+		btnScan = new Button(group, SWT.NONE);
+		btnScan.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
+		btnScan.setBounds(686, 22, 78, 25);
+		btnScan.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				aUsbHidTools = new UsbHidTools();
@@ -180,35 +184,40 @@ public class MainApp {
 
 						System.out.println(aTmpHidDevice);
 					}
-					combo.setEnabled(true);
-					combo.removeAll();
-					combo.setItems(sList);
+					comboDevice.setEnabled(true);
+					comboDevice.removeAll();
+					comboDevice.setItems(sList);
 					JOptionPane.showMessageDialog(null, aDeviceList.size() + " USB HID devices were found",
 							"USB HID scanner", JOptionPane.INFORMATION_MESSAGE);
+					comboDevice.select(0);
+					btnConnect.setEnabled(true);
 
-				} else
-					combo.setEnabled(false);
+				} else {
+					JOptionPane.showMessageDialog(null,"No USB HID device was found",
+							"USB HID scanner", JOptionPane.WARNING_MESSAGE);
+					comboDevice.setEnabled(false);
+				}
 
 			}
 		});
-		btnNewButton.addSelectionListener(new SelectionAdapter() {
+		btnScan.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		btnNewButton.setText("Scan");
+		btnScan.setText("Scan");
 
 		CommandGroup = new Group(shlDesignedByWilliam, SWT.NONE);
 		CommandGroup.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
 		CommandGroup.setEnabled(false);
 		CommandGroup.setBounds(10, 75, 899, 466);
 
-		txtFf = new Text(CommandGroup, SWT.BORDER | SWT.RIGHT);
-		txtFf.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-		txtFf.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
-		txtFf.setText("ff");
-		txtFf.setEnabled(true);
-		txtFf.setBounds(226, 50, 202, 21);
+		txtCmd = new Text(CommandGroup, SWT.BORDER | SWT.RIGHT);
+		txtCmd.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		txtCmd.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
+		txtCmd.setText("ff");
+		txtCmd.setEnabled(true);
+		txtCmd.setBounds(226, 50, 202, 21);
 
 		CLabel lblNewLabel_1 = new CLabel(CommandGroup, SWT.NONE);
 		lblNewLabel_1.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
@@ -227,31 +236,37 @@ public class MainApp {
 		btnSend.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				if (txtFf.getText() == null || txtFf.getText().trim().equals("")) {
+				if (txtCmd.getText() == null || txtCmd.getText().trim().equals("")) {
 					JOptionPane.showMessageDialog(null, "No Command", "Command", JOptionPane.WARNING_MESSAGE);
 				} else {
+
+					JOptionPane pane = new JOptionPane("Please wait, dialog will auto close ");
+					pane.setOptions(new Object[] {});
+					JDialog dialog = pane.createDialog("Processing command");
+					dialog.setModal(false);
+					dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+					dialog.setVisible(true);
+					
 					byte[] aResultSet;
 					byte[] aCmd = null;
-					if (combo_1.getSelectionIndex() == 0) { // hex
-						aCmd = hexStringToByteArray(txtFf.getText());
 
-					} else if (combo_1.getSelectionIndex() == 1) {
-						aCmd = txtFf.getText().getBytes();
+					if (comboEncode.getSelectionIndex() == 0) { // hex
+						aCmd = hexStringToByteArray(txtCmd.getText());
+
+					} else if (comboEncode.getSelectionIndex() == 1) {
+						aCmd = txtCmd.getText().getBytes();
 					}
 
 					try {
 						aResultSet = aUsbHidTools.getResponsedDataBySendCommand(aHidDevice, aCmd,
 								Integer.parseInt(PackageLength.getText()));
-						if (combo_1.getSelectionIndex() == 0) // hex
-							FeedBackMessages.setText("command : (HEX) 0x" + txtFf.getText() + "\r\n"
+						if (comboEncode.getSelectionIndex() == 0) // hex
+							FeedBackMessages.setText("command : (HEX) 0x" + txtCmd.getText() + "\r\n"
 									+ bytesToHexString(aResultSet).toUpperCase() + "\r\n" + FeedBackMessages.getText());
-						else if (combo_1.getSelectionIndex() == 1)
-							FeedBackMessages.setText("command : (Text) " + txtFf.getText() + "\r\n"
+						else if (comboEncode.getSelectionIndex() == 1)
+							FeedBackMessages.setText("command : (Text) " + txtCmd.getText() + "\r\n"
 									+ bytesToHexString(aResultSet).toUpperCase() + "\r\n" + FeedBackMessages.getText());
 
-						// for (byte b : aResultSet) {
-						// System.out.printf(" %02x", b);
-						// }
 					} catch (NumberFormatException e1) {
 
 						e1.printStackTrace();
@@ -260,6 +275,7 @@ public class MainApp {
 
 						e1.printStackTrace();
 					}
+					dialog.dispose();
 				}
 			}
 		});
@@ -272,14 +288,14 @@ public class MainApp {
 		FeedBackMessages.setEnabled(true);
 		FeedBackMessages.setBounds(434, 47, 453, 362);
 
-		combo_1 = new CCombo(CommandGroup, SWT.BORDER | SWT.RIGHT);
-		combo_1.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
-		combo_1.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-		combo_1.setEnabled(true);
-		combo_1.setListVisible(true);
-		combo_1.setItems(new String[] { "HEX ", "TEXT" });
-		combo_1.setBounds(99, 50, 119, 21);
-		combo_1.select(0);
+		comboEncode = new CCombo(CommandGroup, SWT.BORDER | SWT.RIGHT);
+		comboEncode.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
+		comboEncode.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		comboEncode.setEnabled(true);
+		comboEncode.setListVisible(true);
+		comboEncode.setItems(new String[] { "HEX ", "TEXT" });
+		comboEncode.setBounds(99, 50, 119, 21);
+		comboEncode.select(0);
 
 		PackageLength = new Text(CommandGroup, SWT.BORDER);
 		PackageLength.setFont(SWTResourceManager.getFont("Ubuntu", 10, SWT.NORMAL));
@@ -300,7 +316,7 @@ public class MainApp {
 		lblV = new CLabel(CommandGroup, SWT.RIGHT);
 		lblV.setFont(SWTResourceManager.getFont("Verdana", 7, SWT.NORMAL));
 		lblV.setBounds(754, 415, 133, 41);
-		lblV.setText("InMethodUsbHIDTest \r\nv1.1\r\n2018/10/04");
+		lblV.setText("InMethodUsbHIDTest \r\nv1.2\r\n2018/10/05");
 
 		lblMessageSentTo = new CLabel(CommandGroup, SWT.NONE);
 		lblMessageSentTo.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
@@ -333,6 +349,7 @@ public class MainApp {
 				Date current = new Date();
 				dialog.setFileName(aHidDevice.getProduct() + "_UsbHidMessages_" + sdFormat.format(current) + ".txt");
 				if (dialog.open() != null) {
+
 					String sFileName = dialog.getFilterPath() + File.separator + dialog.getFileName();
 					System.out.println("File Name = " + sFileName);
 					try {
@@ -351,7 +368,8 @@ public class MainApp {
 
 		lblMessagesFromDevice = new CLabel(CommandGroup, SWT.NONE);
 		lblMessagesFromDevice.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		lblMessagesFromDevice.setText("Messages received from USB HID device\nOutput :  8 bytes Hex String each line ");
+		lblMessagesFromDevice
+				.setText("Messages received from USB HID device\r\nOutput 8 Bytes data (Hex String) per line ");
 		lblMessagesFromDevice.setFont(SWTResourceManager.getFont("Microsoft JhengHei UI", 10, SWT.BOLD));
 		lblMessagesFromDevice.setBounds(434, 10, 453, 34);
 
@@ -369,16 +387,16 @@ public class MainApp {
 	public static String bytesToHexString(final byte[] hash) {
 		Formatter formatter = new Formatter();
 		int i = 0;
-		int j = 1;
+		int j = -1;
 		for (byte b : hash) {
 			i++;
+			j++;
 			if (i >= 8) {
 				i = 0;
-				j++;
 				formatter.format("%02x\r\n", b);
 
 			} else if (i == 1) {
-				formatter.format("%03d	-	", j);
+				formatter.format("%04d	-	", j);
 				formatter.format("%02x	", b);
 			} else
 				formatter.format("%02x	", b);

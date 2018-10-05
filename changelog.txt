@@ -1,10 +1,17 @@
-v1.1
+v1.2 - 2018/10/05
 --
-1. GUI tunning.
+1. Show bytes counters instead of line number(8 bytes per line)  
+2. Show first scanned device in combo object after scan finished
+3. Variables Name space Refactoring
+4. Show waiting dialog when receiving data from USB HID device
+
+v1.1 - 2018/10/04
+--
+1. GUI tuning.
 2. typo
 3. Modify Message XP .
-4.test in ubuntu 16.04 success.
-5.remove gradle build instead of eclipse export jar runnable file.
+4. test in ubuntu 16.04 success.
+5. remove gradle build instead of eclipse export jar runnable file.
 
 v1.0
 --
