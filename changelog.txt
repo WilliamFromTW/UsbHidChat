@@ -1,3 +1,8 @@
+v1.3
+--
+1. add time stamp every command sent - 2018/10/09
+
+
 v1.2 - 2018/10/05
 --
 1. Show bytes counters instead of line number(8 bytes per line)  

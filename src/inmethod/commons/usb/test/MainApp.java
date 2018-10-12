@@ -260,11 +260,14 @@ public class MainApp {
 					try {
 						aResultSet = aUsbHidTools.getResponsedDataBySendCommand(aHidDevice, aCmd,
 								Integer.parseInt(PackageLength.getText()));
+						SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						Date current = new Date();
+						
 						if (comboEncode.getSelectionIndex() == 0) // hex
-							FeedBackMessages.setText("command : (HEX) 0x" + txtCmd.getText() + "\r\n"
+							FeedBackMessages.setText(sdFormat.format(current)+"\r\n--\r\nCommand : (HEX) 0x" + txtCmd.getText() + "\r\n"
 									+ bytesToHexString(aResultSet).toUpperCase() + "\r\n" + FeedBackMessages.getText());
 						else if (comboEncode.getSelectionIndex() == 1)
-							FeedBackMessages.setText("command : (Text) " + txtCmd.getText() + "\r\n"
+							FeedBackMessages.setText(sdFormat.format(current)+"\r\n--\r\nommand : (Text) " + txtCmd.getText() + "\r\n"
 									+ bytesToHexString(aResultSet).toUpperCase() + "\r\n" + FeedBackMessages.getText());
 
 					} catch (NumberFormatException e1) {
@@ -316,7 +319,7 @@ public class MainApp {
 		lblV = new CLabel(CommandGroup, SWT.RIGHT);
 		lblV.setFont(SWTResourceManager.getFont("Verdana", 7, SWT.NORMAL));
 		lblV.setBounds(754, 415, 133, 41);
-		lblV.setText("InMethodUsbHIDTest \r\nv1.2\r\n2018/10/05");
+		lblV.setText("InMethodUsbHIDTest \r\nv1.3\r\n2018/10/09");
 
 		lblMessageSentTo = new CLabel(CommandGroup, SWT.NONE);
 		lblMessageSentTo.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
