@@ -1,5 +1,5 @@
 ## IDE environments    
-1. Eclipse oxygen 4.7.3a or above    
+1. Eclipse oxygen 4.7.3a 64bits or above    
 2. window builder plug-in 1.9.1 or above        
 http://download.eclipse.org/windowbuilder/latest/        
    
@@ -13,4 +13,9 @@ ps. root permission is requirement in linux platform
 ## Reference    
 this project use InMethodUsbLib and usb4java project         
 https://bitbucket.org/inmethod/inmethodusblib/src/master/     
-https://github.com/gary-rowe/hid4java    		
+https://github.com/gary-rowe/hid4java
+
+## Support Platform    
+1. Windows 7 64bits or above    
+2. Linux Ubuntu 64bits 16.04 or above    
+     		
