@@ -12,8 +12,8 @@ ps. root permission is requirement in linux platform
       
 ## Reference    
 this project use InMethodUsbLib and usb4java project         
-https://bitbucket.org/inmethod/inmethodusblib/src/master/     
-https://github.com/gary-rowe/hid4java
+https://github.com/WilliamFromTW/UsbLib    
+https://github.com/gary-rowe/hid4java    
 
 ## Support Platform    
 1. Windows 7 64bits or above    
