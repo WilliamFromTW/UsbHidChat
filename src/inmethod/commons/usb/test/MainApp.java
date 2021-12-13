@@ -319,7 +319,7 @@ public class MainApp {
 		lblV = new CLabel(CommandGroup, SWT.RIGHT);
 		lblV.setFont(SWTResourceManager.getFont("Verdana", 7, SWT.NORMAL));
 		lblV.setBounds(754, 415, 133, 41);
-		lblV.setText("InMethodUsbHIDTest \r\nv1.3\r\n2018/10/09");
+		lblV.setText("InMethodUsbHIDTest \r\nv1.4\r\n2021/12/10");
 
 		lblMessageSentTo = new CLabel(CommandGroup, SWT.NONE);
 		lblMessageSentTo.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));

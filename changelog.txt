@@ -1,7 +1,10 @@
+v1.4 - 2021/12/10
+--
+bump to hid4java 0.7.0 & jna 5.6.0 
+
 v1.3
 --
 1. add time stamp every command sent - 2018/10/09
-
 
 v1.2 - 2018/10/05
 --
